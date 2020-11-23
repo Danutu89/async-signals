@@ -12,13 +12,13 @@ class AsyncSignal(Signal):
         super(AsyncSignal, self).__init__(providing_args=providing_args)
         self.queue = queue
 
-    def send(self, sender, kwargs):
+    def send(self, sender, **kwargs):
         """Send the signal via Celery."""
 
         self.propagate_signal.apply_async(
             args=(sender),
-            kwargs=kwargs,
             queue=self.queue,
+            kwargs=kwargs
         )
 
     @task
