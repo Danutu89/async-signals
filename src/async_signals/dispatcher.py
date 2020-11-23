@@ -12,17 +12,17 @@ class AsyncSignal(Signal):
         super(AsyncSignal, self).__init__(providing_args=providing_args)
         self.queue = queue
 
-    def send(self, sender, **kwargs):
+    def send(self, sender, data):
         """Send the signal via Celery."""
 
         self.propagate_signal.apply_async(
             args=(sender),
             queue=self.queue,
-            kwargs=kwargs
+            data=data
         )
 
     @task
-    def propagate_signal(self, sender, kwargs):
+    def propagate_signal(self, sender, data):
         """
         Send signal from sender to all connected receivers catching errors.
 
@@ -48,6 +48,6 @@ class AsyncSignal(Signal):
         # Call each receiver with whatever arguments it can accept.
         for receiver in self._live_receivers(_make_id(sender)):
             try:
-                receiver(signal=self, sender=sender, kwargs=kwargs)
+                receiver(signal=self, sender=sender, data=data)
             except Exception:
                 pass
