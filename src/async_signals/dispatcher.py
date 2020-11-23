@@ -22,7 +22,7 @@ class AsyncSignal(Signal):
         )
 
     @task
-    def propagate_signal(self, sender, kwargs):
+    def propagate_signal(self, sender, **kwargs):
         """
         Send signal from sender to all connected receivers catching errors.
 
