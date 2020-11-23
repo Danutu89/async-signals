@@ -22,7 +22,7 @@ class AsyncSignal(Signal):
         )
 
     @task
-    def propagate_signal(self, sender, **kwargs):
+    def propagate_signal(self, sender, kwargs):
         """
         Send signal from sender to all connected receivers catching errors.
 
@@ -48,6 +48,6 @@ class AsyncSignal(Signal):
         # Call each receiver with whatever arguments it can accept.
         for receiver in self._live_receivers(_make_id(sender)):
             try:
-                receiver(signal=self, sender=sender, **kwargs)
+                receiver(signal=self, sender=sender, kwargs=kwargs)
             except Exception:
                 pass
